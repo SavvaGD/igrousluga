@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы — Игро услуга</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: bold; color: #333; text-decoration: none; }
+        .logo:hover { color: #007bff; }
+        .main-content { max-width: 900px; margin: 40px auto; padding: 0 30px; }
+        .page-title { font-size: 32px; margin-bottom: 10px; }
+        .page-subtitle { color: #666; margin-bottom: 30px; }
+
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .review-author { font-weight: bold; font-size: 18px; }
+        .review-date { color: #888; font-size: 14px; }
+        .review-stars { color: #ffb400; font-size: 18px; letter-spacing: 2px; }
+        .review-text { color: #444; margin-top: 8px; }
+
+        .no-reviews { text-align: center; color: #888; font-size: 18px; padding: 40px 0; }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-top: 30px;
+        }
+        .form-section h2 { font-size: 22px; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px 14px; border: 2px solid #ddd; border-radius: 8px;
+            font-size: 16px; font-family: Arial, sans-serif;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: #007bff; outline: none;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .form-row .form-group { flex: 1; min-width: 200px; }
+        .btn-submit { background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn-submit:hover { background: #218838; }
+        .btn-submit:disabled { background: #6c757d; cursor: not-allowed; }
+
+        .btn-back { display: inline-block; margin-top: 30px; color: #007bff; text-decoration: none; }
+        .btn-back:hover { text-decoration: underline; }
+
+        #statusMessage { margin-top: 15px; padding: 12px; border-radius: 8px; display: none; }
+        .status-success { display: block !important; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-error { display: block !important; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        footer { text-align: center; padding: 30px; color: #999; font-size: 14px; border-top: 1px solid #e0e0e0; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+            .then(r => r.text())
+            .then(d => document.getElementById('header-placeholder').innerHTML = d)
+            .catch(() => {});
+    </script>
+
+    <main class="main-content">
+        <h1 class="page-title">💬 Отзывы</h1>
+        <p class="page-subtitle">Что говорят клиенты о моей работе</p>
+
+        <div id="reviewsContainer">
+            <div class="no-reviews">⏳ Загрузка...</div>
+        </div>
+
+        <!-- Форма добавления отзыва -->
+        <div class="form-section">
+            <h2>✍️ Оставить отзыв</h2>
+            <form id="reviewForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reviewName">Ваше имя</label>
+                        <input type="text" id="reviewName" placeholder="Имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewRating">Оценка</label>
+                        <select id="reviewRating" required>
+                            <option value="">Выберите</option>
+                            <option value="5">⭐ 5 — Отлично</option>
+                            <option value="4">⭐ 4 — Хорошо</option>
+                            <option value="3">⭐ 3 — Нормально</option>
+                            <option value="2">⭐ 2 — Плохо</option>
+                            <option value="1">⭐ 1 — Ужасно</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reviewText">Текст отзыва</label>
+                    <textarea id="reviewText" placeholder="Расскажите о вашем опыте..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">📩 Отправить отзыв</button>
+                <div id="statusMessage"></div>
+            </form>
+        </div>
+
+        <a href="index.html" class="btn-back">← Назад на главную</a>
+    </main>
+
+    <footer>© 2026 Игро услуга — Разработка игр на заказ</footer>
+
+    <script>
+        // Загрузка отзывов
+        async function loadReviews() {
+            const container = document.getElementById('reviewsContainer');
+            try {
+                const response = await fetch('reviews.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Нет отзывов');
+                const reviews = await response.json();
+
+                if (reviews.length === 0) {
+                    container.innerHTML = '<div class="no-reviews">📭 Пока нет отзывов. Будьте первым!</div>';
+                    return;
+                }
+
+                let html = '';
+                reviews.forEach(review => {
+                    const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                    html += `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <span class="review-author">${review.name}</span>
+                                <span class="review-stars">${stars}</span>
+                            </div>
+                            <div class="review-date">📅 ${review.date || 'недавно'}</div>
+                            <div class="review-text">${review.text}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = '<div class="no-reviews">📭 Пока нет отзывов. Будьте первым!</div>';
+            }
+        }
+
+        // Отправка отзыва
+        document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('reviewName').value.trim();
+            const rating = document.getElementById('reviewRating').value;
+            const text = document.getElementById('reviewText').value.trim();
+            const status = document.getElementById('statusMessage');
+            const btn = document.getElementById('submitBtn');
+
+            if (!name || !rating || !text) {
+                status.className = 'status-error';
+                status.textContent = '❌ Заполните все поля!';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ Отправка...';
+            status.className = '';
+            status.textContent = '';
+            status.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/add-review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, rating: parseInt(rating), text })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.className = 'status-success';
+                    status.textContent = '✅ Спасибо! Ваш отзыв добавлен.';
+                    document.getElementById('reviewForm').reset();
+                    loadReviews(); // Обновляем список
+                } else {
+                    status.className = 'status-error';
+                    status.textContent = '❌ ' + (data.error || 'Ошибка отправки');
+                }
+            } catch (error) {
+                status.className = 'status-error';
+                status.textContent = '❌ Ошибка соединения. Попробуйте позже.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📩 Отправить отзыв';
+                status.style.display = 'block';
+            }
+        });
+
+        loadReviews();
+    </script>
+
+</body>
+</html>

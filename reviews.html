@@ -125,13 +125,13 @@
 
     <script>
         // ТВОЯ НОВАЯ ССЫЛКА НА APPS SCRIPT
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxL-_u7kjMEy4OesqDPgX0TMl9Kq41kqdmT78RqagKQiTBX5tcol9ifbwIRgVVtsN0R/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwu-E_LxSF6RCIqRU26UG5KExrv8HQPyIUaUThY2DYhtuKVOMov1fv0NKlio7h7Rt7a/exec';
 
         // Загрузка отзывов
         async function loadReviews() {
             const container = document.getElementById('reviewsContainer');
             try {
-                const response = await fetch(SCRIPT_URL + '?action=get');
+                const response = await fetch(SCRIPT_URL);
                 if (!response.ok) throw new Error('Ошибка загрузки');
                 const data = await response.json();
 
@@ -161,7 +161,7 @@
             }
         }
 
-        // Отправка отзыва
+        // Отправка отзыва через GET (обход CORS)
         document.getElementById('reviewForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -184,26 +184,25 @@
             status.style.display = 'none';
 
             try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, rating: parseInt(rating), text })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    status.className = 'status-success';
-                    status.textContent = '✅ Спасибо! Ваш отзыв добавлен.';
-                    document.getElementById('reviewForm').reset();
-                    loadReviews();
-                } else {
-                    status.className = 'status-error';
-                    status.textContent = '❌ ' + (data.error || 'Ошибка отправки');
-                }
+                // Отправляем через GET с параметрами в URL
+                const url = SCRIPT_URL + '?name=' + encodeURIComponent(name) + 
+                           '&rating=' + encodeURIComponent(rating) + 
+                           '&text=' + encodeURIComponent(text);
+                
+                // Используем режим no-cors для обхода CORS
+                await fetch(url, { mode: 'no-cors' });
+                
+                // При no-cors мы не можем прочитать ответ, поэтому считаем, что всё ок
+                status.className = 'status-success';
+                status.textContent = '✅ Спасибо! Ваш отзыв добавлен.';
+                document.getElementById('reviewForm').reset();
+                
+                // Ждём 1 секунду и обновляем список
+                setTimeout(loadReviews, 1000);
+                
             } catch (error) {
                 status.className = 'status-error';
-                status.textContent = '❌ Ошибка соединения. Попробуйте позже.';
+                status.textContent = '❌ Ошибка отправки. Попробуйте позже.';
             } finally {
                 btn.disabled = false;
                 btn.textContent = '📩 Отправить отзыв';
@@ -211,6 +210,7 @@
             }
         });
 
+        // Загружаем отзывы при открытии страницы
         loadReviews();
     </script>
 

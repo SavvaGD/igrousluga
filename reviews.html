@@ -124,21 +124,24 @@
     <footer>© 2026 Игро услуга — Разработка игр на заказ</footer>
 
     <script>
+        // ТВОЯ НОВАЯ ССЫЛКА НА APPS SCRIPT
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxL-_u7kjMEy4OesqDPgX0TMl9Kq41kqdmT78RqagKQiTBX5tcol9ifbwIRgVVtsN0R/exec';
+
         // Загрузка отзывов
         async function loadReviews() {
             const container = document.getElementById('reviewsContainer');
             try {
-                const response = await fetch('reviews.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Нет отзывов');
-                const reviews = await response.json();
+                const response = await fetch(SCRIPT_URL + '?action=get');
+                if (!response.ok) throw new Error('Ошибка загрузки');
+                const data = await response.json();
 
-                if (reviews.length === 0) {
+                if (!data || data.length === 0) {
                     container.innerHTML = '<div class="no-reviews">📭 Пока нет отзывов. Будьте первым!</div>';
                     return;
                 }
 
                 let html = '';
-                reviews.forEach(review => {
+                data.forEach(review => {
                     const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
                     html += `
                         <div class="review-card">
@@ -153,7 +156,8 @@
                 });
                 container.innerHTML = html;
             } catch (error) {
-                container.innerHTML = '<div class="no-reviews">📭 Пока нет отзывов. Будьте первым!</div>';
+                container.innerHTML = '<div class="no-reviews">❌ Не удалось загрузить отзывы. Попробуйте позже.</div>';
+                console.error('Ошибка загрузки отзывов:', error);
             }
         }
 
@@ -180,7 +184,7 @@
             status.style.display = 'none';
 
             try {
-                const response = await fetch('/api/add-review', {
+                const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, rating: parseInt(rating), text })
@@ -192,7 +196,7 @@
                     status.className = 'status-success';
                     status.textContent = '✅ Спасибо! Ваш отзыв добавлен.';
                     document.getElementById('reviewForm').reset();
-                    loadReviews(); // Обновляем список
+                    loadReviews();
                 } else {
                     status.className = 'status-error';
                     status.textContent = '❌ ' + (data.error || 'Ошибка отправки');

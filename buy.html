@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заявка — Игро услуга</title>
+    <title>Заказать игру — Игро услуга</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
         .header-container { max-width: 1200px; margin: 0 auto; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; color: #333; text-decoration: none; }
         .logo:hover { color: #007bff; }
@@ -49,7 +49,7 @@
 
     <main class="main-content">
         <div class="order-card">
-            <h1>Оставить заявку</h1>
+            <h1>Оформить заказ</h1>
             <p class="subtitle">Заполните форму, и я свяжусь с вами</p>
 
             <div id="statusMessage" class="status-message"></div>
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="portfolio-link">
-                    📁 <strong>Портфолио:</strong> <a href="https://savva-gd.itch.io/" target="_blank">savva-gd.itch.io</a>
+                    📁 <strong>Моё портфолио:</strong> <a href="https://savva-gd.itch.io/" target="_blank">savva-gd.itch.io</a>
                 </div>
 
                 <div class="info-block">
@@ -95,37 +95,54 @@
         </div>
     </main>
 
-    <footer>© 2026 Игро услуга</footer>
+    <footer>© 2026 Игро услуга — Разработка игр на заказ</footer>
 
     <script>
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
+        // ССЫЛКА НА СКРИПТ ЗАКАЗОВ
+        const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnSpe6lUY38ddt7wXMqc_x0LliEklqb9x8AWgfgRvSpUmEE-k3xHMXxeHWiHLim1JHsYVtsfBhhdHWLX6kPz5FgJfDkxdICzBm_8F9TtANcdM1LW0iG4eHGCAYu8BHBnisHuRF5Z29qgOgYWsU6nlP69f9gEA3u2BKIYN1Bf0r8KaNfFlNzqNO_9Q3NtmtbeRwzjguNlNZvYTyadLSFwTyiTVX_Bi5ATjrbsVJ_litj0feY8xRdHjPQwNrOU-8cmD6KQhoWsPGCv2xszYr_0q0KiTrGUdg&lib=MjKvejEL8VspAnGrqIqNCvhtExy1eM-DM';
+
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const name = document.getElementById('client_name').value.trim();
             const phone = document.getElementById('client_phone').value.trim();
             const description = document.getElementById('game_description').value.trim();
+            const service = document.getElementById('service').value;
+            const status = document.getElementById('statusMessage');
+            const btn = document.getElementById('submitBtn');
 
             if (!name || !phone || !description) {
-                alert('Заполните все поля!');
+                status.className = 'status-message error';
+                status.textContent = '❌ Заполните все поля!';
                 return;
             }
 
-            const email = 'supertube.postserver@gmail.com';
-            const subject = encodeURIComponent('Новая заявка — Игро услуга');
-            const body = encodeURIComponent(
-                `Услуга: Создам игру на Unreal Engine — 15 000 ₽\n\n` +
-                `Описание игры:\n${description}\n\n` +
-                `Имя: ${name}\n` +
-                `Телефон: ${phone}`
-            );
+            btn.disabled = true;
+            btn.textContent = '⏳ Отправка...';
+            status.className = 'status-message';
+            status.textContent = '';
+            status.style.display = 'none';
 
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-
-            const status = document.getElementById('statusMessage');
-            status.className = 'status-message success';
-            status.style.display = 'block';
-            status.textContent = '✅ Открывается почта. Отправьте письмо.';
-            document.getElementById('orderForm').reset();
+            try {
+                const url = SCRIPT_URL + '?name=' + encodeURIComponent(name) + 
+                           '&phone=' + encodeURIComponent(phone) + 
+                           '&description=' + encodeURIComponent(description) +
+                           '&service=' + encodeURIComponent(service);
+                
+                await fetch(url, { mode: 'no-cors' });
+                
+                status.className = 'status-message success';
+                status.textContent = '✅ Заявка отправлена! Я свяжусь с вами.';
+                document.getElementById('orderForm').reset();
+                
+            } catch (error) {
+                status.className = 'status-message error';
+                status.textContent = '❌ Ошибка отправки. Попробуйте позже.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📩 Отправить заявку';
+                status.style.display = 'block';
+            }
         });
     </script>
 </body>

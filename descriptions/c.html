@@ -26,10 +26,10 @@
         .back-link { display: inline-block; margin-top: 30px; color: #007bff; text-decoration: none; }
         .back-link:hover { text-decoration: underline; }
         .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; border-top: 1px solid #e0e0e0; margin-top: 40px; }
-        .platform-tags { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
-        .platform-tags span { background: #e9ecef; padding: 4px 12px; border-radius: 20px; font-size: 13px; color: #555; }
+        .terminal-preview { background: #0d1117; color: #3fb950; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 14px; margin: 20px 0; border: 1px solid #30363d; white-space: pre; overflow-x: auto; }
         @media (max-width: 600px) {
             .service-card { padding: 20px; }
+            .terminal-preview { font-size: 12px; padding: 12px; }
         }
     </style>
 </head>
@@ -59,34 +59,42 @@
 
     <main class="main-content">
         <div class="service-card">
-            <h1>🎮 Создание консольных игр на C</h1>
+            <h1>🖥️ Консольные игры на C</h1>
             <div class="price">
                 3 000 ₽ <span>за игру</span>
             </div>
 
-            <div class="platform-tags">
-                <span>🟣 PlayStation 1</span>
-                <span>🟢 PlayStation 2</span>
-                <span>🟠 Dreamcast</span>
-                <span>🔴 Game Boy Advance</span>
-                <span>⚫ PSP</span>
+            <div class="description">
+                <p>Создаю игры для <strong>терминала</strong> (командной строки) на языке <strong>C</strong>. Это текстовые игры, которые работают в любом терминале — Windows CMD, Linux bash, macOS Terminal.</p>
+                <p>Идеально для обучения, портфолио или просто фанатов ретро-текстовых приключений.</p>
             </div>
 
-            <div class="description">
-                <p>Разрабатываю игры для ретро-консолей на языке <strong>C</strong>. Это отличный способ создать игру для коллекционеров, фанатов старых консолей или для портфолио.</p>
-                <p>Поддерживаются консоли: <strong>PS1, PS2, Dreamcast, Game Boy Advance, PSP</strong>.</p>
+            <div class="terminal-preview">
+                > Добро пожаловать в Dungeon!
+                > Вы находитесь в тёмной пещере.
+                > Куда идёте? (вперёд/назад/влево/вправо)
+                > вперед
+                > Вы видите сундук. Открыть? (да/нет)
+                > да
+                > 🎉 Вы нашли золотой меч!
             </div>
 
             <div class="details">
-                <p><strong>🗓 Срок:</strong> от 3 до 10 дней (зависит от консоли и сложности).</p>
-                <p><strong>💳 Оплата:</strong> полная предоплата (для консольных игр).</p>
+                <p><strong>🗓 Срок:</strong> от 1 до 5 дней.</p>
+                <p><strong>💳 Оплата:</strong> полная предоплата.</p>
                 <p><strong>📦 Что получаете:</strong></p>
                 <ul>
-                    <li>Готовый образ для консоли (ISO, ROM, ELF)</li>
                     <li>Исходный код на C</li>
-                    <li>Тестовый билд для эмулятора</li>
+                    <li>Скомпилированный .exe (Windows) или бинарник (Linux/macOS)</li>
+                    <li>Инструкцию по запуску</li>
                 </ul>
-                <p style="margin-top: 10px;"><strong>⚠️ Важно:</strong> Игра разрабатывается для запуска на эмуляторах и оригинальном железе (с прошивкой или мод-чипом).</p>
+                <p style="margin-top: 10px;"><strong>🛠️ Примеры игр:</strong></p>
+                <ul>
+                    <li>Текстовый квест</li>
+                    <li>Рогалик в терминале</li>
+                    <li>Игра «Угадай число» с сюжетом</li>
+                    <li>Симулятор выбора</li>
+                </ul>
             </div>
 
             <a href="/buy.html" class="btn">🎮 Заказать игру</a>

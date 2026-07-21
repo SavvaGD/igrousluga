@@ -36,8 +36,71 @@
         .status-message.success { display: block; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-message.error { display: block; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; border-top: 1px solid #e0e0e0; margin-top: 40px; }
+
+        /* CAPTCHA STYLES */
+        .captcha-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .captcha-text {
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 2px dashed #007bff;
+            color: #007bff;
+            user-select: none;
+            min-width: 150px;
+            text-align: center;
+        }
+        .captcha-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            min-width: 150px;
+        }
+        .captcha-input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .captcha-refresh {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .captcha-refresh:hover {
+            background: #5a6268;
+        }
+        .captcha-error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
         @media (max-width: 600px) {
             .order-card { padding: 20px; }
+            .captcha-container { flex-direction: column; align-items: stretch; gap: 10px; }
+            .captcha-text { font-size: 24px; letter-spacing: 4px; }
+            .captcha-refresh { align-self: flex-start; }
         }
     </style>
 </head>
@@ -101,6 +164,14 @@
                     📁 <strong>Моё портфолио:</strong> <a href="https://savva-gd.itch.io/" target="_blank">savva-gd.itch.io</a>
                 </div>
 
+                <!-- CAPTCHA -->
+                <div class="captcha-container">
+                    <span class="captcha-text" id="captchaText">A7F2K</span>
+                    <input type="text" class="captcha-input" id="captchaInput" placeholder="Введите код с картинки" maxlength="5" autocomplete="off" />
+                    <button type="button" class="captcha-refresh" id="captchaRefresh">🔄 Обновить</button>
+                </div>
+                <div class="captcha-error" id="captchaError">❌ Неверный код. Попробуйте ещё раз.</div>
+
                 <div class="info-block">
                     <strong>💬 Как мы работаем</strong>
                     <p>1. Вы оставляете заявку.</p>
@@ -120,6 +191,39 @@
     </footer>
 
     <script>
+        // ============================================================
+        // 1. CAPTCHA
+        // ============================================================
+
+        const captchaText = document.getElementById('captchaText');
+        const captchaInput = document.getElementById('captchaInput');
+        const captchaRefresh = document.getElementById('captchaRefresh');
+        const captchaError = document.getElementById('captchaError');
+
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let result = '';
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function refreshCaptcha() {
+            captchaText.textContent = generateCaptcha();
+            captchaInput.value = '';
+            captchaError.style.display = 'none';
+        }
+
+        captchaRefresh.addEventListener('click', refreshCaptcha);
+
+        // Генерируем капчу при загрузке
+        refreshCaptcha();
+
+        // ============================================================
+        // 2. ОТПРАВКА ФОРМЫ
+        // ============================================================
+
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNkXnUslHGuOl4pwvU2wdX7LX85EtiDZydEKvjyiw0JRfW0Dyw9-U_Ly7jvgkLb66c/exec';
 
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
@@ -131,6 +235,18 @@
             const service = document.getElementById('service').value;
             const status = document.getElementById('statusMessage');
             const btn = document.getElementById('submitBtn');
+
+            // Проверка капчи
+            const userCaptcha = captchaInput.value.trim().toUpperCase();
+            const realCaptcha = captchaText.textContent;
+            if (userCaptcha !== realCaptcha) {
+                captchaError.style.display = 'block';
+                captchaInput.style.borderColor = '#dc3545';
+                refreshCaptcha();
+                return;
+            }
+            captchaError.style.display = 'none';
+            captchaInput.style.borderColor = '#ddd';
 
             if (!name || !phone || !description) {
                 status.className = 'status-message error';
@@ -156,6 +272,7 @@
                 status.className = 'status-message success';
                 status.textContent = '✅ Заявка отправлена! Я свяжусь с вами.';
                 document.getElementById('orderForm').reset();
+                refreshCaptcha();
                 
             } catch (error) {
                 status.className = 'status-message error';

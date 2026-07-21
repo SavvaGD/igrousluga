@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игры — Игро услуга</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            color: #007bff;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .game-icon {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #e9ecef;
+            margin-bottom: 15px;
+        }
+
+        .game-icon-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .game-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #222;
+        }
+
+        .game-genre {
+            font-size: 14px;
+            color: #007bff;
+            margin-bottom: 8px;
+        }
+
+        .game-description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 12px;
+            flex-grow: 1;
+        }
+
+        .game-meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .game-action {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+
+        .game-status {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .status-indev {
+            color: #ffc107;
+        }
+
+        .status-closed {
+            color: #dc3545;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #dee2e6;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        .password-input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .success-text {
+            color: #28a745;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 40px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px 0;
+            color: #888;
+            font-size: 18px;
+        }
+
+        .no-games {
+            text-align: center;
+            padding: 50px 0;
+            color: #888;
+            font-size: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">🎮 Игро услуга</a>
+            <nav>
+                <a href="/" style="color: #007bff; text-decoration: none; margin-right: 15px;">Главная</a>
+                <a href="/games/" style="color: #333; text-decoration: none;">Игры</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">🎮 Все игры</h1>
+        <p class="page-subtitle">Коллекция игр, разработанных в рамках «Игро услуга»</p>
+
+        <div id="gamesContainer">
+            <div class="loading">⏳ Загрузка игр...</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        © 2026 Игро услуга — Разработка игр на заказ
+    </footer>
+
+    <script>
+        // Конфигурация
+        const GAMES_JSON_URL = 'all.json';
+        const ICONS_PATH = 'icons/';
+        const FILES_PATH = 'files/';
+
+        // Состояние для onbypas
+        const passwordStates = {};
+
+        // Загрузка данных
+        async function loadGames() {
+            const container = document.getElementById('gamesContainer');
+            try {
+                const response = await fetch(GAMES_JSON_URL + '?t=' + Date.now());
+                if (!response.ok) throw new Error('Не удалось загрузить список игр');
+                const data = await response.json();
+                
+                const gameNames = Object.keys(data);
+                if (gameNames.length === 0) {
+                    container.innerHTML = '<div class="no-games">📭 Пока нет игр</div>';
+                    return;
+                }
+
+                let html = '<div class="games-grid">';
+                for (const name of gameNames) {
+                    const game = data[name];
+                    html += renderGameCard(name, game);
+                }
+                html += '</div>';
+                container.innerHTML = html;
+
+                // Инициализация обработчиков для onbypas
+                document.querySelectorAll('.game-card[data-dltype="onbypas"]').forEach(card => {
+                    const gameId = card.dataset.gameId;
+                    const input = card.querySelector('.password-input');
+                    const btn = card.querySelector('.btn-submit-password');
+                    const error = card.querySelector('.error-text');
+                    const success = card.querySelector('.success-text');
+                    const hiddenDiv = card.querySelector('.hidden-content');
+
+                    if (btn) {
+                        btn.addEventListener('click', function() {
+                            const password = input ? input.value.trim() : '';
+                            const hash = card.dataset.dlval || '';
+                            // Простая проверка хеша (в реальном проекте используйте SHA-256)
+                            // Здесь для демонстрации используем простое сравнение хеша
+                            const inputHash = simpleHash(password);
+                            if (inputHash === hash) {
+                                // Пароль верный — показываем скрытый контент
+                                if (hiddenDiv) hiddenDiv.style.display = 'block';
+                                if (error) error.style.display = 'none';
+                                if (success) {
+                                    success.textContent = '✅ Пароль верный!';
+                                    success.style.display = 'block';
+                                }
+                                if (input) input.style.borderColor = '#28a745';
+                                btn.disabled = true;
+                                btn.textContent = '✅ Доступ открыт';
+                                // Сохраняем состояние
+                                passwordStates[gameId] = true;
+                            } else {
+                                if (error) {
+                                    error.textContent = '❌ Неверный пароль';
+                                    error.style.display = 'block';
+                                }
+                                if (input) input.style.borderColor = '#dc3545';
+                                if (success) success.style.display = 'none';
+                            }
+                        });
+                    }
+
+                    // Восстанавливаем состояние, если уже был введён пароль
+                    if (passwordStates[gameId]) {
+                        if (hiddenDiv) hiddenDiv.style.display = 'block';
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.textContent = '✅ Доступ открыт';
+                        }
+                        if (input) input.style.borderColor = '#28a745';
+                    }
+                });
+
+            } catch (error) {
+                container.innerHTML = `<div class="no-games">❌ Ошибка загрузки: ${error.message}</div>`;
+                console.error('Ошибка загрузки игр:', error);
+            }
+        }
+
+        // Простая хеш-функция для демонстрации (в реальном проекте используйте SHA-256)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash.toString(16);
+        }
+
+        // Рендер карточки игры
+        function renderGameCard(name, game) {
+            const dltype = game.dltype || 'clofrfrdl';
+            const dlval = game.dlval || '';
+            const icon = game.icon || '';
+            const description = game.description || 'Описание отсутствует';
+            const genre = game.genre || 'Не указан';
+            const language = game.language || 'Не указан';
+
+            let actionHtml = '';
+            let statusHtml = '';
+            let extraHtml = '';
+            let dataAttrs = `data-dltype="${dltype}" data-dlval="${dlval}" data-game-id="${name.replace(/\s+/g, '_')}"`;
+
+            switch (dltype) {
+                case 'dlbutton':
+                    actionHtml = `<a href="${FILES_PATH}${dlval}" class="btn btn-success" download>📥 Скачать</a>`;
+                    break;
+
+                case 'linkbutton':
+                    actionHtml = `<a href="${dlval}" target="_blank" class="btn btn-primary">🔗 Перейти</a>`;
+                    break;
+
+                case 'getgame':
+                    actionHtml = `
+                        <div style="margin-bottom: 8px;">
+                            <span class="code-block">${dlval}</span>
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="copyCode('${dlval}')">📋 Скопировать код</button>
+                        <a href="https://getgame.igrousluga.site" target="_blank" class="btn btn-sm btn-primary" style="margin-top: 5px;">🎮 Перейти в GetGame</a>
+                    `;
+                    break;
+
+                case 'indev':
+                    statusHtml = `<span class="game-status status-indev">🛠 В разработке</span>`;
+                    actionHtml = `<button class="btn btn-secondary" disabled>В разработке</button>`;
+                    break;
+
+                case 'onbypas':
+                    const gameId = name.replace(/\s+/g, '_');
+                    const dltype2 = game.dltype2 || '';
+                    const dlval2 = game.dlval2 || '';
+                    let hiddenAction = '';
+                    if (dltype2 === 'dlbutton') {
+                        hiddenAction = `<a href="${FILES_PATH}${dlval2}" class="btn btn-success" download>📥 Скачать</a>`;
+                    } else if (dltype2 === 'linkbutton') {
+                        hiddenAction = `<a href="${dlval2}" target="_blank" class="btn btn-primary">🔗 Перейти</a>`;
+                    } else if (dltype2 === 'getgame') {
+                        hiddenAction = `
+                            <span class="code-block">${dlval2}</span>
+                            <button class="btn btn-sm btn-secondary" onclick="copyCode('${dlval2}')">📋 Скопировать код</button>
+                        `;
+                    } else {
+                        hiddenAction = `<span style="color: #888;">Контент недоступен</span>`;
+                    }
+
+                    actionHtml = `
+                        <div>
+                            <input type="password" class="password-input" placeholder="Введите пароль" />
+                            <button class="btn btn-warning btn-submit-password">🔑 Ввести пароль</button>
+                            <div class="error-text" style="display: none;"></div>
+                            <div class="success-text" style="display: none;"></div>
+                            <div class="hidden-content" style="display: none; margin-top: 10px;">
+                                ${hiddenAction}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'clofrfrdl':
+                default:
+                    statusHtml = `<span class="game-status status-closed">🔒 Закрыто от свободного скачивания</span>`;
+                    actionHtml = `<button class="btn btn-danger" disabled>Закрыто</button>`;
+                    break;
+            }
+
+            // Иконка
+            let iconHtml = '';
+            if (icon) {
+                iconHtml = `<img src="${ICONS_PATH}${icon}" alt="${name}" class="game-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+                iconHtml += `<div class="game-icon-placeholder" style="display: none;">🖼️ Нет иконки</div>`;
+            } else {
+                iconHtml = `<div class="game-icon-placeholder">🖼️ Нет иконки</div>`;
+            }
+
+            return `
+                <div class="game-card" ${dataAttrs}>
+                    ${iconHtml}
+                    <div class="game-name">${name}</div>
+                    <div class="game-genre">🎯 ${genre}</div>
+                    <div class="game-description">${description}</div>
+                    <div class="game-meta">🌐 ${language}</div>
+                    ${statusHtml}
+                    <div class="game-action">
+                        ${actionHtml}
+                    </div>
+                    ${extraHtml}
+                </div>
+            `;
+        }
+
+        // Функция копирования кода
+        function copyCode(code) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('✅ Код скопирован: ' + code);
+                }).catch(() => {
+                    fallbackCopy(code);
+                });
+            } else {
+                fallbackCopy(code);
+            }
+        }
+
+        function fallbackCopy(code) {
+            const textArea = document.createElement('textarea');
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('✅ Код скопирован: ' + code);
+            } catch (err) {
+                alert('❌ Не удалось скопировать. Скопируйте вручную: ' + code);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Запуск
+        loadGames();
+    </script>
+
+</body>
+</html>

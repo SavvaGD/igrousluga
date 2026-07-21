@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Услуги — Игро услуга</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { font-size: 24px; font-weight: bold; color: #333; text-decoration: none; }
+        .logo:hover { color: #007bff; }
+        .main-content { max-width: 1200px; margin: 40px auto; padding: 0 30px; }
+        .page-title { font-size: 32px; margin-bottom: 10px; color: #222; }
+        .page-subtitle { color: #666; margin-bottom: 30px; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .service-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: #333; display: block; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+        .service-card h3 { font-size: 22px; margin-bottom: 10px; color: #007bff; }
+        .service-card .price { font-size: 24px; font-weight: bold; color: #28a745; margin: 10px 0; }
+        .service-card .desc { font-size: 14px; color: #555; }
+        .service-card .tag { display: inline-block; background: #e9ecef; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: #666; margin-top: 10px; }
+        .service-card .tag.available { background: #d4edda; color: #155724; }
+        .service-card .tag.unavailable { background: #f8d7da; color: #721c24; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; border-top: 1px solid #e0e0e0; margin-top: 40px; }
+        @media (max-width: 600px) {
+            .services-grid { grid-template-columns: 1fr; }
+        }
+        .back-link { display: inline-block; margin-top: 30px; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div id="header"></div>
+    <script>
+        fetch('/header.html')
+            .then(r => r.text())
+            .then(data => document.getElementById('header').innerHTML = data)
+            .catch(() => {
+                document.getElementById('header').innerHTML = `
+                    <header>
+                        <div class="header-container">
+                            <a href="/" class="logo">🎮 Игро услуга</a>
+                            <nav>
+                                <a href="/">Главная</a>
+                                <a href="/descriptions/">Услуги</a>
+                                <a href="/games/">Игры</a>
+                                <a href="/reviews.html">Отзывы</a>
+                            </nav>
+                        </div>
+                    </header>
+                `;
+            });
+    </script>
+
+    <main class="main-content">
+        <h1 class="page-title">📋 Наши услуги</h1>
+        <p class="page-subtitle">Выберите тип игры, который хотите заказать</p>
+
+        <div class="services-grid">
+            <a href="/descriptions/ue.html" class="service-card">
+                <h3>🖥️ Unreal Engine</h3>
+                <div class="price">15 000 ₽</div>
+                <div class="desc">Разработка игры на Unreal Engine 4.27 для PC. Полный цикл — от идеи до билда.</div>
+                <span class="tag available">✅ Доступно</span>
+            </a>
+
+            <a href="/descriptions/c.html" class="service-card">
+                <h3>🎮 Консольная игра на C</h3>
+                <div class="price">3 000 ₽</div>
+                <div class="desc">Создание игры для консолей (PS1, PS2, Dreamcast, GBA, PSP) на языке C.</div>
+                <span class="tag available">✅ Доступно</span>
+            </a>
+
+            <a href="#" class="service-card" style="opacity: 0.6; cursor: not-allowed;">
+                <h3>📀 PS1 игра на C</h3>
+                <div class="price">20 000 ₽</div>
+                <div class="desc">Полноценная игра для PlayStation 1 на языке C.</div>
+                <span class="tag unavailable">⏳ Временно недоступно</span>
+            </a>
+        </div>
+
+        <a href="/" class="back-link">← На главную</a>
+    </main>
+
+    <footer class="footer">
+        © 2026 Игро услуга — Студия разработки игр на заказ
+    </footer>
+
+</body>
+</html>
